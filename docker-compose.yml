@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  dev:
+    image: "rust:1.47"
+    volumes:
+      - ./projects:/projects
+    environment:
+      - USER=stuart
