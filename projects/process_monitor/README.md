@@ -21,5 +21,5 @@ To run this projct locally
 ### Docker
 
 A Dockerfile is also provided for running this project with in a container.
-
+Run the following command at the root of this repo:
 `docker-compose run --rm dev`
