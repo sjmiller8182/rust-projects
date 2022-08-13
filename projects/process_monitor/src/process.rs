@@ -168,7 +168,7 @@ impl Process {
             "PID",
             "USER",
             "CPU[%]",
-            "RAM[kb]",
+            "RAM[KB]",
             "UPTIME",
             "COMMAND",
         )
