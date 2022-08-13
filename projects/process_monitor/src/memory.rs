@@ -1,21 +1,15 @@
 use std::fmt;
 use crate::format;
 use crate::linux_parser;
-#[derive(Debug)]
+
+#[derive(Debug, Clone, Copy)]
 pub enum MemScale {
-    AsKiloBytes,
-    AsMegaBytes,
-    AsGibaBytes,
+    AsKiloBytes = 1,
+    AsMegaBytes = 1000,
+    AsGibaBytes = 1000000,
 }
 
 impl MemScale {
-    fn value(&self) -> u64 {
-        match *self {
-            MemScale::AsKiloBytes => 1,
-            MemScale::AsMegaBytes => 1000,
-            MemScale::AsGibaBytes => 1000000,
-        }
-    }
 
     fn unit(&self) -> String {
         match *self {
@@ -50,8 +44,8 @@ impl MemInfo {
     pub fn new() -> MemInfo {
         let scaling = MemScale::AsKiloBytes;
         let (free_mem, total_mem) = linux_parser::get_mem_utilization();
-        let free_mem = free_mem / scaling.value();
-        let total_mem = total_mem / scaling.value();
+        let free_mem = free_mem / scaling as u64;
+        let total_mem = total_mem / scaling as u64;
 
         MemInfo { total_mem, free_mem, scaling}
     }
@@ -62,7 +56,7 @@ impl MemInfo {
 
     pub fn refresh(&mut self) {
         let (free_mem, _) = linux_parser::get_mem_utilization();
-        let free_mem = free_mem / self.scaling.value();
+        let free_mem = free_mem / self.scaling as u64;
 
         self.free_mem = free_mem
     }
