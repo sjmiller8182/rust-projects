@@ -25,5 +25,9 @@ To run this projct locally
 ### Docker
 
 A Dockerfile is also provided for running this project with in a container.
-Run the following command at the root of this repo:
-`docker-compose run --rm dev`
+Run the following commands from within this project folder:
+
+```bash
+docker build -t process_monitor .
+docker run -it --rm --name process_monitor process_monitor
+```
