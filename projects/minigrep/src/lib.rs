@@ -1,9 +1,8 @@
-
-use std::fs;
 use std::env;
 use std::error::Error;
+use std::fs;
 
-pub struct Config{
+pub struct Config {
     pub query: String,
     pub filename: String,
     pub case_sensitive: bool,
@@ -12,7 +11,7 @@ pub struct Config{
 impl Config {
     pub fn new(args: &[String]) -> Result<Config, &'static str> {
         if args.len() < 3 {
-            return  Err("Not enough arguments");
+            return Err("Not enough arguments");
         }
 
         let case_sensitive = match args.get(3) {
@@ -23,12 +22,15 @@ impl Config {
         let query = args[1].clone();
         let filename = args[2].clone();
         //let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
-        Ok(Config {query, filename, case_sensitive})
+        Ok(Config {
+            query,
+            filename,
+            case_sensitive,
+        })
     }
 }
 
-
-pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
+pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.filename)?;
 
     let results = if config.case_sensitive {
@@ -44,7 +46,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
     Ok(())
 }
 
-pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str>{
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let mut results = vec![];
 
     for line in contents.lines() {
@@ -56,7 +58,7 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str>{
     results
 }
 
-pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str>{
+pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let query = query.to_lowercase();
     let mut results = vec![];
 
@@ -69,9 +71,9 @@ pub fn search_case_insensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a st
     results
 }
 
-pub fn parse_case_sensitivity_arg(arg: &str) -> bool{
+pub fn parse_case_sensitivity_arg(arg: &str) -> bool {
     if arg.to_lowercase() == "sensitive" {
-        return true
+        return true;
     }
     false
 }
@@ -80,7 +82,6 @@ pub fn parse_case_sensitivity_arg(arg: &str) -> bool{
 mod tests {
 
     use super::*;
-
 
     #[test]
     fn one_result() {
@@ -114,7 +115,10 @@ safe, fast, productive.
 Pick three.
 Trust and Duct me.";
 
-        assert_eq!(vec!["safe, fast, productive.", "Trust and Duct me."], search_case_insensitive(query, contents))
+        assert_eq!(
+            vec!["safe, fast, productive.", "Trust and Duct me."],
+            search_case_insensitive(query, contents)
+        )
     }
 
     #[test]
@@ -129,4 +133,3 @@ Trust and Duct me.";
         assert!(!parse_case_sensitivity_arg(case_sens_arg))
     }
 }
-
